@@ -27,6 +27,7 @@ import (
 func main() {
 	ctx := context.TODO()
 
+	//sessionidss值，从抖音PC网页版的cookie中获取(需登陆)，一般有效期在2-3个月
 	douyinUrl := "0.00 yGI:/ 12/31 M@j.Pk 我在阴暗潮湿的角落里。# 无声卡清唱 # 深夜  https://v.douyin.com/iRTEcALS/ 复制此链接，打开Dou音搜索，直接观看视频！"
 	dyRes, _ := goget.GetDouyinVideo(ctx, douyinUrl, "7e133c8db26fbb6ec369b5c551aa4d14")
 	flog.Info(dyRes)
@@ -44,3 +45,10 @@ func main() {
 	flog.Info(bres)
 }
 ```
+
+## TODO
+### 解析抖音视频，需要登陆用户的cookie
+
+`登陆网页版抖音抖音后, 找到cookie中的 sessionid_ss参数， 复制该值, 有效期一般在2-3个月，建议使用小号的cookie`
+
+![img.png](img.png)
