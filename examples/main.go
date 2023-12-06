@@ -1,21 +1,3 @@
-# goget
-🚀「goget」是一个开箱即用的 [抖音](https://www.douyin.com) | [西瓜视频](https://www.ixigua.com) | [快手](https://www.kuaishou.com) | [Bilibili](https://www.bilibili.com) 视频解析工具
-
-
-## ⚙ Installation
-
-```text
-go get -u github.com/eininst/goget
-```
-
-## ✨功能：
-- 抖音视频/图片解析
-- Bilibili视频解析
-- 西瓜视频解析
-- 快手视频解析
-
-## Examples
-```go
 package main
 
 import (
@@ -43,4 +25,3 @@ func main() {
 	bres, _ := goget.GetBilibiliVideo(ctx, bilibiliUrl)
 	flog.Info(bres)
 }
-```
