@@ -14,6 +14,7 @@ func GetDouyinVideo(ctx context.Context, url string, sessionidss string) (string
 func GetKsVideo(ctx context.Context, url string) (map[string]string, error) {
 	return ks.GetVideo(ctx, url)
 }
+
 func GetXgVideo(ctx context.Context, url string) (string, error) {
 	return xg.GetVideo(ctx, url)
 }
