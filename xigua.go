@@ -52,6 +52,36 @@ func NewXiguaVideo(opts ...Option) *XiguaVideo {
 	}
 }
 
+func (c *XiguaVideo) GetVideoId(ctx context.Context, url string) (string, error) {
+	videoId := url
+	_, err := strconv.ParseInt(url, 10, 64)
+	if err != nil {
+		if strings.Contains(url, "v.ixigua.com") {
+			res, er := c.Cli1.Get(url)
+			if er != nil {
+				return "", er
+			}
+			locationUrl, er := res.Location()
+			if er != nil {
+				return "", er
+			}
+			vidUrl := strings.Split(locationUrl.String(), "?")[0]
+			_vid := DigitReg.FindString(vidUrl)
+			if _vid == "" {
+				return "", errors.New("无法解析该地址")
+			}
+			videoId = _vid
+		} else {
+			_vid := UrlReg.FindString(url)
+			if _vid == "" {
+				return "", errors.New("无法解析该地址")
+			}
+			videoId = _vid
+		}
+	}
+	return videoId, nil
+}
+
 func (c *XiguaVideo) GetVideo(ctx context.Context, url string) (string, error) {
 	videoId := url
 	_, err := strconv.ParseInt(url, 10, 64)

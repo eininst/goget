@@ -37,6 +37,26 @@ func NewBiliBiliVideo(opts ...Option) *BiliBiliVideo {
 	}
 }
 
+func (c *BiliBiliVideo) GetVideoId(ctx context.Context, url string) (string, error) {
+	videoId := url
+	if strings.Contains(url, "https://www.bilibili.com") {
+		xx := UrlReg.FindString(url)
+		xx = strings.Replace(xx, "https://www.bilibili.com/video/", "", -1)
+		lindex := strings.Index(xx, "/")
+		if lindex == -1 {
+			lindex = len(xx)
+		}
+		videoId = xx[0:lindex]
+	}
+
+	videoId = strings.Replace(videoId, "video/BV", "", -1)
+	if strings.Contains(videoId, "video/av") {
+		videoId = strings.Replace(videoId, "video/av", "", -1)
+	}
+
+	return videoId, nil
+}
+
 func (c *BiliBiliVideo) GetVideo(ctx context.Context, url string) (map[string]any, error) {
 	videoId := url
 	if strings.Contains(url, "https://www.bilibili.com") {

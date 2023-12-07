@@ -38,6 +38,34 @@ func NewDouyinVideo(opts ...Option) *DouyinVideo {
 	}
 }
 
+func (c *DouyinVideo) GetVideoId(ctx context.Context, url string) (string, error) {
+	var vid string
+	_, err := strconv.ParseInt(url, 10, 64)
+	if err == nil {
+		vid = url
+	} else {
+		if strings.Contains(url, "www.douyin.com/video") {
+			vid = DigitReg.FindString(url)
+			if vid == "" {
+				return "", errors.New("无效的地址")
+			}
+		} else {
+			surl := UrlReg.FindString(url)
+			if surl == "" {
+				return "", errors.New("无效的地址")
+			}
+
+			videoId, er := c.getDouyinVideoId(ctx, surl)
+			if er != nil {
+				return "", er
+			}
+			vid = videoId
+		}
+	}
+
+	return vid, nil
+}
+
 func (c *DouyinVideo) GetVideo(ctx context.Context, url string, sessionidss string) (string, error) {
 	var vid string
 	_, err := strconv.ParseInt(url, 10, 64)

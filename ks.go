@@ -40,6 +40,27 @@ func NewKsVideo(opts ...Option) *KsVideo {
 	}
 }
 
+func (c *KsVideo) GetVideoId(ctx context.Context, url string) (string, error) {
+	var vid string
+	_, err := strconv.ParseInt(url, 10, 64)
+	if err == nil {
+		vid = url
+	} else {
+		if strings.Contains(url, "v.kuaishou.com") ||
+			strings.Contains(url, "https://www.kuaishou.com/f") {
+			_videoUrl, er := c.getVideoId(ctx, url)
+			if er != nil {
+				return "", er
+			}
+			vid = _videoUrl
+		}
+	}
+	if vid == "" {
+		return "", errors.New("获取视频ID失败")
+	}
+	return vid, nil
+}
+
 func (c *KsVideo) GetVideo(ctx context.Context, url string) (map[string]string, error) {
 	var videoUrl = url
 	_, err := strconv.ParseInt(url, 10, 64)
