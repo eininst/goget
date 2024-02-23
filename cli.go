@@ -6,24 +6,32 @@ import (
 	"time"
 )
 
-type Client struct {
-	Timeout   time.Duration
-	Transport http.RoundTripper
-}
-
 type Option struct {
 	F func(o *Options)
 }
 
 type Options struct {
-	Timeout   time.Duration
-	Transport http.RoundTripper
+	Timeout          time.Duration
+	Transport        http.RoundTripper
+	ProxyUrl         string
+	ProxyRedirectUrl string
 }
 
 func (o *Options) Apply(opts []Option) {
 	for _, op := range opts {
 		op.F(o)
 	}
+}
+
+func WithProxyUrl(proxyUrl string) Option {
+	return Option{F: func(o *Options) {
+		o.ProxyUrl = proxyUrl
+	}}
+}
+func WithProxyRedirectUrl(proxyRedirectUrl string) Option {
+	return Option{F: func(o *Options) {
+		o.ProxyRedirectUrl = proxyRedirectUrl
+	}}
 }
 
 func WithTimeout(timeout time.Duration) Option {

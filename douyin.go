@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"github.com/eininst/flog"
 	"io"
 	"net/http"
 	"strconv"
@@ -55,7 +56,7 @@ func (c *DouyinVideo) GetVideoId(ctx context.Context, url string) (string, error
 				return "", errors.New("无效的地址")
 			}
 
-			videoId, er := c.getDouyinVideoId(ctx, surl)
+			videoId, er := c.GetDouyinVideoId(ctx, surl)
 			if er != nil {
 				return "", er
 			}
@@ -83,7 +84,7 @@ func (c *DouyinVideo) GetVideo(ctx context.Context, url string, sessionidss stri
 				return "", errors.New("无效的地址")
 			}
 
-			videoId, er := c.getDouyinVideoId(ctx, surl)
+			videoId, er := c.GetDouyinVideoId(ctx, surl)
 			if er != nil {
 				return "", er
 			}
@@ -118,15 +119,17 @@ func (c *DouyinVideo) GetVideo(ctx context.Context, url string, sessionidss stri
 	return string(body), nil
 }
 
-func (c *DouyinVideo) getDouyinVideoId(ctx context.Context, surl string) (string, error) {
+func (c *DouyinVideo) GetDouyinVideoId(ctx context.Context, surl string) (string, error) {
 	res, er := c.Cli.Get(surl)
 	if er != nil {
 		return "", er
 	}
-	if res.StatusCode != 302 {
+	if res.StatusCode != 302 && res.StatusCode != 301 {
 		return "", errors.New("获取视频ID失败")
 	}
 	locUrl, _ := res.Location()
+
+	flog.Info(locUrl.String())
 	result := DigitReg.FindString(locUrl.String())
 	if result == "" {
 		return "", errors.New("解析参数失败 ->" + locUrl.String())
