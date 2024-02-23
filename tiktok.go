@@ -59,7 +59,7 @@ func (c *Tiktok) GetTiktok(ctx context.Context, url string) (string, error) {
 				return "", errors.New("无效的地址")
 			}
 
-			videoId, er := c.GetTiktokVideoId(ctx, surl)
+			videoId, er := c.getTiktokVideoId(ctx, surl)
 			if er != nil {
 				return "", er
 			}
@@ -93,7 +93,35 @@ func (c *Tiktok) GetTiktok(ctx context.Context, url string) (string, error) {
 	return string(body), nil
 }
 
-func (c *Tiktok) GetTiktokVideoId(ctx context.Context, surl string) (string, error) {
+func (c *Tiktok) GetId(ctx context.Context, url string) (string, error) {
+	var vid string
+	_, err := strconv.ParseInt(url, 10, 64)
+	if err == nil {
+		vid = url
+	} else {
+		if strings.Contains(url, "www.tiktok.com/") {
+			vid = DigitReg.FindString(url)
+			if vid == "" {
+				return "", errors.New("无效的地址")
+			}
+		} else {
+			surl := UrlReg.FindString(url)
+			if surl == "" {
+				return "", errors.New("无效的地址")
+			}
+
+			videoId, er := c.getTiktokVideoId(ctx, surl)
+			if er != nil {
+				return "", er
+			}
+			vid = videoId
+		}
+	}
+
+	return vid, nil
+}
+
+func (c *Tiktok) getTiktokVideoId(ctx context.Context, surl string) (string, error) {
 	if c.ProxyRedirectUrl != "" {
 		surl = strings.Replace(surl, "https://vt.tiktok.com", c.ProxyRedirectUrl, -1)
 	}

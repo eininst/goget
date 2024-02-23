@@ -56,7 +56,7 @@ func (c *DouyinVideo) GetVideoId(ctx context.Context, url string) (string, error
 				return "", errors.New("无效的地址")
 			}
 
-			videoId, er := c.GetDouyinVideoId(ctx, surl)
+			videoId, er := c.getDouyinVideoId(ctx, surl)
 			if er != nil {
 				return "", er
 			}
@@ -84,7 +84,7 @@ func (c *DouyinVideo) GetVideo(ctx context.Context, url string, sessionidss stri
 				return "", errors.New("无效的地址")
 			}
 
-			videoId, er := c.GetDouyinVideoId(ctx, surl)
+			videoId, er := c.getDouyinVideoId(ctx, surl)
 			if er != nil {
 				return "", er
 			}
@@ -119,7 +119,7 @@ func (c *DouyinVideo) GetVideo(ctx context.Context, url string, sessionidss stri
 	return string(body), nil
 }
 
-func (c *DouyinVideo) GetDouyinVideoId(ctx context.Context, surl string) (string, error) {
+func (c *DouyinVideo) getDouyinVideoId(ctx context.Context, surl string) (string, error) {
 	res, er := c.Cli.Get(surl)
 	if er != nil {
 		return "", er
